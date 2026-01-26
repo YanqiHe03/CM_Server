@@ -1,0 +1,20 @@
+# RunPod Serverless Dependencies
+runpod>=1.6.0
+
+# PyTorch - RunPod base images usually have CUDA-enabled PyTorch pre-installed
+# If using custom base image, uncomment the following:
+# torch>=2.0.0
+# torchvision>=0.15.0
+
+# Hugging Face Transformers
+transformers>=4.40.0
+accelerate>=0.27.0
+
+# Image processing
+Pillow>=10.0.0
+
+# HTTP requests (for loading images from URL)
+requests>=2.28.0
+
+# For Qwen-VL model
+qwen-vl-utils>=0.0.2
