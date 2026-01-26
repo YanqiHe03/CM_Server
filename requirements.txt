@@ -1,14 +1,14 @@
 # RunPod Serverless Dependencies
 runpod>=1.6.0
 
-# PyTorch - RunPod base images usually have CUDA-enabled PyTorch pre-installed
-# If using custom base image, uncomment the following:
-# torch>=2.0.0
-# torchvision>=0.15.0
+# PyTorch - 基础镜像 pytorch:2.2.1 已预装
+# 不需要重新安装，注释掉以避免冲突
+# torch>=2.2.0
+# torchvision>=0.17.0
 
-# Hugging Face Transformers
-transformers>=4.40.0
-accelerate>=0.27.0
+# Hugging Face Transformers - 固定兼容版本
+transformers>=4.37.0,<4.45.0
+accelerate>=0.27.0,<0.30.0
 
 # Image processing
 Pillow>=10.0.0
