@@ -15,7 +15,7 @@ from transformers import AutoModelForVision2Seq, AutoProcessor
 from PIL import Image
 
 # --- Configuration ---
-MODEL_PATH = "./models/cm-gallery-vlm"  # Merged fine-tuned VLM model
+MODEL_PATH = "GRMD/complimentary-machine-vlm"  # Merged fine-tuned VLM model
 PORT = 8000
 
 app = FastAPI()
