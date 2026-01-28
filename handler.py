@@ -34,7 +34,7 @@ def load_model():
     if model is not None:
         return  # Model already loaded
     
-    print(f"🚀 Loading VLM Model from Hugging Face: {MODEL_ID}")
+    print(f"[INFO] Loading VLM Model from Hugging Face: {MODEL_ID}")
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
@@ -55,10 +55,10 @@ def load_model():
         )
         
         model.eval()
-        print(f"✅ Model Loaded Successfully on {device}!")
+        print(f"[OK] Model Loaded Successfully on {device}!")
         
     except Exception as e:
-        print(f"❌ Error loading model: {e}")
+        print(f"[ERR] Error loading model: {e}")
         raise e
 
 
@@ -92,19 +92,12 @@ def load_image(image_input):
 def generate_compliment(pil_image, user_text=None):
     """
     Generate compliment directly from image using the fine-tuned VLM.
-    The merged model has learned to give compliments based on images.
+    Model was trained with image-only input, no text prompt needed.
     """
-    # Build prompt - the model was trained to handle images directly
-    if user_text:
-        text_content = f"给这个场景一个赞美。用户说：{user_text}"
-    else:
-        text_content = "给这个场景一个温暖的赞美。"
-    
     messages = [{
         "role": "user",
         "content": [
-            {"type": "image", "image": pil_image},
-            {"type": "text", "text": text_content}
+            {"type": "image", "image": pil_image}
         ]
     }]
     

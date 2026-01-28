@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Complimentary Machine - RunPod Pods Server
-直接在 RunPod Pods 上运行的 FastAPI 服务器
-从 Hugging Face Hub 加载模型
+FastAPI server running on RunPod Pods
+Loads model from Hugging Face Hub
 """
 
 import os
@@ -16,7 +16,7 @@ from PIL import Image
 
 # --- Configuration ---
 MODEL_ID = os.environ.get("HF_MODEL_ID", "GRMD/complimentary-machine-vlm")
-HF_TOKEN = os.environ.get("HF_TOKEN", None)  # 私有仓库需要
+HF_TOKEN = os.environ.get("HF_TOKEN", None)  # Required for private repos
 PORT = int(os.environ.get("PORT", 8000))
 
 app = FastAPI(title="Complimentary Machine API")
@@ -38,7 +38,7 @@ def load_model():
     """Load model from Hugging Face Hub"""
     global model, processor, device
     
-    print(f"🚀 Loading VLM Model from Hugging Face: {MODEL_ID}")
+    print(f"[INFO] Loading VLM Model from Hugging Face: {MODEL_ID}")
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
@@ -58,25 +58,20 @@ def load_model():
         )
         
         model.eval()
-        print(f"✅ Model Loaded Successfully on {device}!")
+        print(f"[OK] Model Loaded Successfully on {device}!")
         
     except Exception as e:
-        print(f"❌ Error loading model: {e}")
+        print(f"[ERR] Error loading model: {e}")
         raise e
 
 
 def generate_compliment(pil_image, user_text=None):
     """Generate compliment from image using the fine-tuned VLM."""
-    if user_text:
-        text_content = f"给这个场景一个赞美。用户说：{user_text}"
-    else:
-        text_content = "给这个场景一个温暖的赞美。"
-    
+    # Model was trained with image-only input, no text prompt needed
     messages = [{
         "role": "user",
         "content": [
-            {"type": "image", "image": pil_image},
-            {"type": "text", "text": text_content}
+            {"type": "image", "image": pil_image}
         ]
     }]
     
