@@ -21,7 +21,7 @@ except ImportError:
 from PIL import Image
 
 # --- Configuration ---
-MODEL_ID = os.environ.get("HF_MODEL_ID", "GRMD/cm-gallery-vlm")
+MODEL_ID = os.environ.get("HF_MODEL_ID", "GRMD/complimentary-machine-vlm")
 HF_TOKEN = os.environ.get("HF_TOKEN", None)  # 私有仓库需要
 PORT = int(os.environ.get("PORT", 8000))
 
