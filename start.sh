@@ -3,20 +3,27 @@
 # 用法: 在 Pod 启动命令中设置 bash /workspace/CM_Server/start.sh
 
 # --- 配置 ---
-export HF_MODEL_ID="GRMD/complimentary-machine-vlm"  # 改成你的模型路径
-export HF_TOKEN=""  # 如果是私有仓库，填入你的 HuggingFace Token
+export HF_MODEL_ID="GRMD/complimentary-machine-vlm"
+export HF_TOKEN=""
 export PORT=8000
-
-# --- 设置 HuggingFace 缓存目录（可选，加速重启） ---
 export HF_HOME="/workspace/.cache/huggingface"
 
-# --- 启动服务 ---
+# --- 获取脚本所在目录（支持任意位置运行） ---
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 echo "=========================================="
 echo "  Complimentary Machine Server Starting  "
 echo "=========================================="
 echo "Model: $HF_MODEL_ID"
 echo "Port: $PORT"
+echo "Dir: $SCRIPT_DIR"
 echo ""
 
-cd /workspace/CM_Server
+# --- 安装依赖（静默模式） ---
+echo "Installing dependencies..."
+pip install -r requirements.txt -q
+
+# --- 启动服务 ---
+echo "Starting server..."
 python server_pod.py
