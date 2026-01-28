@@ -2,7 +2,7 @@
 runpod>=1.6.0
 
 # Hugging Face Transformers - Qwen3-VL 需要 4.45+
-transformers==4.57.0
+transformers==4.57.1
 accelerate>=0.30.0
 
 # Image processing
