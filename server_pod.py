@@ -11,7 +11,13 @@ import torch
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from transformers import AutoModelForVision2Seq, AutoProcessor
+try:
+    # transformers 4.x
+    from transformers import AutoModelForVision2Seq, AutoProcessor
+except ImportError:
+    # transformers 5.x - 使用 Qwen2-VL 专用类
+    from transformers import Qwen2VLForConditionalGeneration as AutoModelForVision2Seq
+    from transformers import AutoProcessor
 from PIL import Image
 
 # --- Configuration ---
