@@ -28,22 +28,44 @@ app.add_middleware(
 )
 
 # --- Model Loading ---
-print("Loading Merged VLM Model on PC...")
-device = "cuda" if torch.cuda.is_available() else "cpu"
-dtype = torch.bfloat16 if device == "cuda" else torch.float32
+print("Loading Merged VLM Model...")
+
+# Device selection: CUDA > MPS (Apple Silicon) > CPU
+if torch.cuda.is_available():
+    device = "cuda"
+    dtype = torch.bfloat16
+    print("🖥️  Using NVIDIA CUDA GPU")
+elif torch.backends.mps.is_available():
+    device = "mps"
+    dtype = torch.float16  # MPS works better with float16
+    print("🍎 Using Apple Silicon MPS (M1/M2/M3/M4)")
+else:
+    device = "cpu"
+    dtype = torch.float32
+    print("💻 Using CPU (this will be slow)")
 
 try:
     # Load merged model directly (no LoRA needed)
-    model = AutoModelForVision2Seq.from_pretrained(
-        MODEL_PATH,
-        torch_dtype=dtype,
-        trust_remote_code=True,
-        device_map="auto"
-    )
+    # Note: device_map="auto" works best for CUDA; for MPS/CPU we load then move
+    if device == "cuda":
+        model = AutoModelForVision2Seq.from_pretrained(
+            MODEL_PATH,
+            torch_dtype=dtype,
+            trust_remote_code=True,
+            device_map="auto"
+        )
+    else:
+        # For MPS and CPU, load without device_map then move to device
+        model = AutoModelForVision2Seq.from_pretrained(
+            MODEL_PATH,
+            torch_dtype=dtype,
+            trust_remote_code=True,
+        ).to(device)
+
     processor = AutoProcessor.from_pretrained(MODEL_PATH, trust_remote_code=True)
-    
+
     model.eval()
-    print(f"✅ Merged VLM Model Loaded Successfully from {MODEL_PATH}!")
+    print(f"✅ Model Loaded Successfully on {device.upper()}!")
     
 except Exception as e:
     print(f"❌ Error loading model: {e}")
